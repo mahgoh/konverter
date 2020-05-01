@@ -1,0 +1,22 @@
+{
+  "name": "konverter",
+  "version": "0.1.0",
+  "description": "convert to jpg, png, webp",
+  "main": "bin.js",
+  "bin": {
+    "konverter": "bin.js"
+  },
+  "keywords": [
+    "convert"
+  ],
+  "author": {
+    "name": "Marek Blomkvist",
+    "email": "marekblomkvist@malako.net"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^5.1.0",
+    "minimist": "^1.2.5",
+    "sharp": "^0.25.2"
+  }
+}

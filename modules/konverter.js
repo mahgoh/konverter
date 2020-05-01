@@ -2,14 +2,16 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const sharp = require('sharp');
+const heicConvert = require('heic-convert');
 
 module.exports = class Konverter {
   static async init(options) {
     let defaults = {
       filter: ['.DS_Store'],
       input: './input',
-      target: './output',
-      format: 'jpg',
+      output: './output',
+      format: 'webp',
+      target: 'jpg',
     };
 
     const settings = { ...defaults, ...options };
@@ -17,11 +19,11 @@ module.exports = class Konverter {
     let inputFiles = await Konverter.getFilesOfDir(settings.input);
     let filteredInputFiles = await Konverter.filterFiles(inputFiles, settings.filter);
 
-    // Make target dir if not existant
-    await Konverter.mkDirIfNotExists(settings.target);
+    // Make output directory if not existant
+    await Konverter.mkDirIfNotExists(settings.output);
 
-    // Convert all images and save to target folder
-    await Konverter.convert(settings.input, settings.target, settings.format, filteredInputFiles);
+    // Convert all images and save to output directory
+    await Konverter.convert(settings, filteredInputFiles);
 
     console.log(`${filteredInputFiles.length} file(s) converted.`);
   }
@@ -44,46 +46,74 @@ module.exports = class Konverter {
     });
   }
 
-  static async convert(input, target, format, filteredInputFiles) {
+  static async convert(settings, filteredInputFiles) {
     await Konverter.asyncForEach(filteredInputFiles, async (file) => {
-      const sourcePath = path.resolve(input, file);
+      const sourcePath = path.resolve(settings.input, file);
 
       let splitted = file.split('.');
-      splitted[splitted.length - 1] = format;
+      splitted[splitted.length - 1] = settings.target;
       const filename = splitted.join('.');
 
-      const targetPath = path.resolve(target, filename);
+      const outputPath = path.resolve(settings.output, filename);
 
-      let buffer;
+      let inputBuffer, outputBuffer;
 
-      switch (format) {
-        case 'jpg':
-          try {
-            buffer = await sharp(sourcePath).jpeg().toBuffer();
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        case 'png':
-          try {
-            buffer = await sharp(sourcePath).png().toBuffer();
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        case 'webp':
-          try {
-            buffer = await sharp(sourcePath).webp().toBuffer();
-          } catch (err) {
-            console.log(err);
+      switch (settings.format) {
+        case 'heic':
+        case 'heif':
+          switch (settings.target) {
+            case 'jpg':
+              inputBuffer = await fs.readFile(sourcePath);
+
+              outputBuffer = await heicConvert({
+                buffer: inputBuffer, // the HEIC file buffer
+                format: 'JPEG', // output format
+                quality: 1, // the jpeg compression quality, between 0 and 1
+              });
+
+              break;
+            case 'png':
+              inputBuffer = await fs.readFile(sourcePath);
+
+              outputBuffer = await heicConvert({
+                buffer: inputBuffer, // the HEIC file buffer
+                format: 'PNG', // output format
+              });
+              break;
           }
           break;
         default:
-          console.log('Target file format not supported.');
+          switch (settings.target) {
+            case 'jpg':
+              try {
+                outputBuffer = await sharp(sourcePath).jpeg().toBuffer();
+              } catch (err) {
+                console.log(err);
+              }
+              break;
+            case 'png':
+              try {
+                outputBuffer = await sharp(sourcePath).png().toBuffer();
+              } catch (err) {
+                console.log(err);
+              }
+              break;
+            case 'webp':
+              try {
+                outputBuffer = await sharp(sourcePath).webp().toBuffer();
+              } catch (err) {
+                console.log(err);
+              }
+              break;
+            default:
+              console.log('Target file format not supported.');
+              break;
+          }
+
           break;
       }
 
-      await fs.writeFile(targetPath, buffer);
+      await fs.writeFile(outputPath, outputBuffer);
 
       console.log(`${filename}`);
     });

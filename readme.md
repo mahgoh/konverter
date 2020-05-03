@@ -16,6 +16,8 @@ If the input format is HEIC or HEIF, it has to be specified with the --format (-
 The target format is specified by the --target (-t) argument.
 For further information see `konverter -h`.
 
-`konverter -i ./path/to/input/dir -o ./path/to/output/dir -f inputformat -t targetformat`
+```bash
+konverter -i ./path/to/input/dir -o ./path/to/output/dir -f inputformat -t targetformat
+```
 
 

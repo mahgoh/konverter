@@ -19,8 +19,8 @@ module.exports = async function init() {
     const path = require('path');
 
     const options = {
-      input: path.resolve(__dirname, program.input),
-      output: path.resolve(__dirname, program.output),
+      input: path.resolve(program.input),
+      output: path.resolve(program.output),
       format: program.format,
       target: program.target,
     };

@@ -1,9 +1,9 @@
 # Конвертер
-Simple CLI to onvert images from `JPEG, PNG, WEBP, HEIC, HEIF` to `JPEG, PNG or WEBP`.
+Simple CLI to convert images from `JPEG, PNG, WEBP, HEIC, HEIF` to `JPEG, PNG or WEBP`.
 
 ## Setup
 In order to use Конвертер, the bin script has to be linked.
-This has to be done once in order to use global.
+This has to be done once in order to use globally.
 
 ```bash
 npm link

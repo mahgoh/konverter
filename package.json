@@ -1,7 +1,7 @@
 {
   "name": "konverter",
-  "version": "0.1.0",
-  "description": "convert to jpg, png, webp",
+  "version": "0.1.1",
+  "description": "Simple CLI to convert images from JPEG, PNG, WEBP, HEIC, HEIF to JPEG, PNG or WEBP.",
   "main": "bin.js",
   "bin": {
     "konverter": "bin.js"
@@ -10,8 +10,8 @@
     "convert"
   ],
   "author": {
-    "name": "Marek Blomkvist",
-    "email": "marekblomkvist@malako.net"
+    "name": "mahgoh",
+    "email": "mahgoh@malako.xyz"
   },
   "license": "ISC",
   "dependencies": {
